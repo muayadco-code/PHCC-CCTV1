@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CCTV PHCC">
+<meta name="theme-color" content="#0d3b6e">
+<meta name="description" content="PHCC CCTV Rooms Inspection Checklist">
+<link rel="apple-touch-icon" id="ati">
+<title>CCTV Check | PHCC</title>
+
+<!-- ═══════════════════════════════════════
+     STYLES
+═══════════════════════════════════════ -->
+<style>
+:root{
+  --navy:#0d3b6e;--blue:#1a5276;--teal:#0e6655;
+  --green:#16a34a;--red:#dc2626;--amber:#d97706;
+  --wa:#25d366;--wa2:#128c7e;
+  --bg:#f0f4f9;--card:#fff;--border:#dce4ef;
+  --text:#0f1f35;--muted:#64748b;
+  --r:15px;
+  --sat:env(safe-area-inset-top,0px);
+  --sab:env(safe-area-inset-bottom,20px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;height:100%}
+body{
+  font-family:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;
+  padding-bottom:calc(88px + var(--sab));
+  -webkit-font-smoothing:antialiased;
+}
+input,select,textarea,button{
+  font-family:inherit;-webkit-appearance:none;appearance:none;
+}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+/* ── TOPBAR ── */
+.tb{
+  background:linear-gradient(150deg,#07213f 0%,#1a5276 100%);
+  color:#fff;
+  padding:calc(var(--sat)+12px) 16px 12px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 16px rgba(0,0,0,.28);
+}
+.tb-r{display:flex;align-items:center;gap:10px}
+.tb-ico{
+  width:42px;height:42px;border-radius:11px;flex-shrink:0;
+  background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;font-size:21px;
+}
+.tb-t{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.tb-s{font-size:10px;opacity:.7;margin-top:1px}
+.pb{margin-top:10px;height:5px;border-radius:4px;background:rgba(255,255,255,.18);overflow:hidden}
+.pf{height:100%;background:#34d399;border-radius:4px;transition:width .35s cubic-bezier(.4,0,.2,1);width:0%}
+.pl{font-size:10px;opacity:.6;margin-top:4px}
+
+/* ── PILLS ── */
+.pills{display:flex;gap:6px;overflow-x:auto;padding:10px 14px 0;scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.pill{
+  flex-shrink:0;padding:6px 13px;border-radius:18px;
+  border:1.5px solid var(--border);background:var(--card);
+  font-size:12px;font-weight:600;color:var(--muted);
+  transition:all .2s;white-space:nowrap;
+}
+.pill.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.pill.dn{border-color:var(--green);color:var(--green)}
+.pill.dn::before{content:'✓ '}
+
+/* ── CARD ── */
+.card{
+  margin:10px 13px 0;background:var(--card);
+  border-radius:var(--r);
+  box-shadow:0 1px 6px rgba(13,59,110,.07),0 4px 18px rgba(13,59,110,.05);
+  overflow:hidden;display:none;
+}
+.card.on{display:block}
+.ch{
+  padding:13px 15px;display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid var(--border);
+}
+.ci{
+  width:37px;height:37px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.c-bl{background:#dbeafe}.c-gn{background:#dcfce7}
+.c-or{background:#ffedd5}.c-sl{background:#f1f5f9}
+.ct{font-size:14px;font-weight:700}
+.cs{font-size:11px;color:var(--muted);margin-top:1px}
+
+/* ── FIELDS ── */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+.fw{grid-column:1/-1}
+.fl{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.fi,.fsl{
+  width:100%;padding:11px 13px;
+  border:1.5px solid var(--border);border-radius:11px;
+  font-size:14px;background:var(--bg);color:var(--text);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.fi:focus,.fsl:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(26,82,118,.1);background:#fff;
+}
+.sw{position:relative}
+.sw::after{
+  content:'▾';position:absolute;left:12px;top:50%;
+  transform:translateY(-50%);font-size:12px;
+  color:var(--muted);pointer-events:none;
+}
+
+/* ── SECTION LABEL ── */
+.sl{
+  margin:13px 13px 5px;
+  font-size:10px;font-weight:700;letter-spacing:.5px;
+  text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;gap:7px;
+}
+.sl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── CHECK ITEM ── */
+.ci2{
+  margin:0 13px 7px;padding:12px 12px 9px;
+  border:1.5px solid var(--border);border-radius:12px;
+  background:#fafcff;transition:border-color .2s,background .2s;
+}
+.ci2.g{border-color:var(--green);background:#f0fdf4}
+.ci2.b{border-color:var(--red);background:#fef2f2}
+.ci2.a{border-color:var(--blue);background:#eff6ff}
+.ci2.ia{border-color:var(--red);background:#fef2f2}
+.ck-lbl{font-size:13px;font-weight:600;margin-bottom:7px;line-height:1.4}
+.ck-en{display:block;font-size:10px;color:var(--muted);font-weight:400;margin-top:1px}
+.sw2{position:relative}
+.sw2::after{
+  content:'▾';position:absolute;left:11px;top:50%;
+  transform:translateY(-50%);font-size:11px;
+  color:var(--muted);pointer-events:none;
+}
+.cks{
+  width:100%;padding:9px 30px 9px 11px;
+  border:1.5px solid var(--border);border-radius:9px;
+  font-size:13px;font-weight:600;
+  background:var(--card);color:var(--text);
+  outline:none;transition:all .2s;
+}
+.cks:focus{border-color:var(--blue)}
+.cks.sg{border-color:var(--green);color:var(--green);background:#f0fdf4}
+.cks.sb{border-color:var(--red);color:var(--red);background:#fef2f2}
+.cks.sa{border-color:var(--blue);color:var(--blue);background:#eff6ff}
+.cks.sia{border-color:var(--red);color:var(--red);background:#fef2f2}
+.cn{
+  margin-top:6px;width:100%;padding:8px 10px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-size:13px;background:var(--card);color:var(--text);
+  outline:none;resize:none;transition:border-color .2s;
+}
+.cn:focus{border-color:var(--blue)}
+
+/* ── NUMBERS ── */
+.ng{display:grid;gap:8px;margin-bottom:7px}
+.nc{display:flex;flex-direction:column;gap:3px}
+.nlb{font-size:10px;font-weight:700;color:var(--muted)}
+.ni{
+  padding:10px 6px;border:1.5px solid var(--border);
+  border-radius:9px;font-size:17px;font-weight:700;
+  text-align:center;background:var(--bg);color:var(--text);
+  outline:none;width:100%;transition:border-color .2s;
+}
+.ni:focus{border-color:var(--blue);background:#fff}
+.ni.ng2{border-color:var(--green);color:var(--green);background:#f0fdf4}
+.ni.nb2{border-color:var(--red);color:var(--red);background:#fef2f2}
+
+/* ── SUMMARY ── */
+.sh{
+  background:linear-gradient(150deg,#07213f 0%,#1a5276 100%);
+  color:#fff;padding:18px 16px;
+}
+.sh h2{font-size:17px;font-weight:700}
+.sh p{font-size:11px;opacity:.75;margin-top:2px}
+.scr{
+  display:flex;flex-direction:column;
+  align-items:center;padding:18px 16px 8px;gap:3px;
+}
+.sn{font-size:60px;font-weight:800;line-height:1;letter-spacing:-2px}
+.sn.gr{color:var(--green)}.sn.am{color:var(--amber)}.sn.rd{color:var(--red)}
+.slb{font-size:12px;color:var(--muted)}
+.sr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;padding:0 13px 14px}
+.sb2{padding:11px 6px;border-radius:11px;text-align:center}
+.sb2 .n{font-size:26px;font-weight:800}.sb2 .l{font-size:11px;margin-top:1px}
+.sg2{background:#dcfce7;color:var(--green)}
+.sb3{background:#fee2e2;color:var(--red)}
+.sn2{background:#f1f5f9;color:var(--muted)}
+
+/* ── WA SECTION ── */
+.was{padding:13px;border-top:1px solid var(--border)}
+.was h3{font-size:13px;font-weight:700;margin-bottom:12px}
+.wabtn{
+  width:100%;padding:17px;
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  color:#fff;border:none;border-radius:13px;
+  font-size:16px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  box-shadow:0 4px 16px rgba(37,211,102,.3);
+  transition:all .18s;margin-bottom:11px;
+  letter-spacing:-.2px;
+}
+.wabtn:active{transform:scale(.97);box-shadow:none}
+.waok{
+  display:flex;align-items:center;gap:7px;
+  padding:9px 13px;border-radius:10px;margin-bottom:11px;
+  background:#dcfce7;color:var(--green);
+  border:1.5px solid #bbf7d0;font-size:12px;font-weight:600;
+  display:none;
+}
+.waprev-btn{
+  background:none;border:none;
+  font-size:12px;color:var(--blue);font-weight:600;
+  text-decoration:underline;display:block;margin-bottom:7px;
+  padding:4px 0;
+}
+.waprev{
+  background:#f8fafc;border:1.5px solid var(--border);
+  border-radius:10px;padding:10px 11px;
+  font-size:11px;font-family:'SF Mono',monospace;
+  white-space:pre-wrap;line-height:1.6;
+  max-height:150px;overflow-y:auto;
+  color:var(--text);margin-bottom:9px;
+  direction:ltr;text-align:left;display:none;
+}
+.waprev.on{display:block}
+.wdiv{
+  display:flex;align-items:center;gap:9px;
+  margin:12px 0;color:var(--muted);font-size:11px;
+}
+.wdiv::before,.wdiv::after{content:'';flex:1;height:1px;background:var(--border)}
+.wch{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 11px;border-radius:10px;
+  border:1.5px solid var(--border);background:var(--bg);
+  margin-bottom:6px;
+}
+.wav{
+  width:33px;height:33px;border-radius:50%;
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;flex-shrink:0;
+}
+.wai{flex:1;min-width:0}
+.wan{font-size:13px;font-weight:700}
+.wanu{font-size:11px;color:var(--muted);direction:ltr}
+.wcs{
+  background:linear-gradient(135deg,#25d366,#128c7e);
+  color:#fff;border:none;border-radius:7px;
+  padding:6px 11px;font-size:12px;font-weight:700;white-space:nowrap;
+}
+.wcd{background:none;border:none;font-size:16px;color:#cbd5e1;padding:2px 4px}
+.wadd-btn{
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:8px;padding:5px 10px;
+  font-size:12px;font-weight:600;color:var(--blue);
+}
+.wadd-form{
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:10px;padding:11px;margin-bottom:7px;display:none;
+}
+.wadd-form.on{display:block}
+.wadd-g{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.wsave{
+  width:100%;padding:10px;background:var(--wa);
+  color:#fff;border:none;border-radius:9px;
+  font-size:13px;font-weight:700;
+}
+.wempty{
+  text-align:center;padding:16px 11px;
+  background:var(--bg);border-radius:10px;
+  border:1.5px dashed var(--border);
+  color:var(--muted);font-size:12px;line-height:1.6;
+}
+.cpybtn{
+  width:100%;padding:12px;background:var(--bg);
+  border:1.5px solid var(--border);border-radius:11px;
+  font-size:13px;font-weight:700;color:var(--text);
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  margin-top:5px;
+}
+.cpybtn:active{background:var(--border)}
+.rstbtn{
+  width:100%;padding:12px;background:none;
+  border:1.5px solid #fca5a5;border-radius:11px;
+  color:var(--red);font-size:13px;font-weight:700;margin-top:7px;
+}
+
+/* ── NAV BAR ── */
+.nb{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  padding:9px 14px calc(9px + var(--sab));
+  display:flex;gap:9px;z-index:200;
+}
+.nbtn{
+  flex:1;padding:13px;border-radius:12px;border:none;
+  font-size:14px;font-weight:700;transition:all .15s;
+}
+.nbtn:active{transform:scale(.97)}
+.np{background:var(--bg);color:var(--muted)}
+.nn{background:var(--navy);color:#fff}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;
+  bottom:calc(88px + var(--sab));left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:#0f172a;color:#fff;
+  padding:10px 20px;border-radius:20px;
+  font-size:13px;font-weight:600;
+  opacity:0;pointer-events:none;
+  transition:all .28s cubic-bezier(.4,0,.2,1);
+  z-index:999;white-space:nowrap;
+  box-shadow:0 4px 18px rgba(0,0,0,.28);
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── PWA BANNERS ── */
+#instBanner{
+  display:none;
+  position:fixed;bottom:calc(88px + var(--sab));
+  left:12px;right:12px;z-index:300;
+  background:linear-gradient(135deg,#07213f,#1a5276);
+  color:#fff;border-radius:15px;padding:13px 15px;
+  box-shadow:0 8px 28px rgba(0,0,0,.32);
+  align-items:center;gap:11px;
+}
+#instBanner.on{display:flex}
+.ibtn{
+  background:#25d366;color:#fff;border:none;
+  border-radius:9px;padding:8px 13px;
+  font-size:13px;font-weight:700;white-space:nowrap;
+}
+.iclose{
+  background:rgba(255,255,255,.15);color:#fff;
+  border:none;border-radius:7px;padding:7px 9px;font-size:13px;
+}
+
+#iosHint{
+  display:none;
+  position:fixed;bottom:calc(88px + var(--sab));
+  left:12px;right:12px;z-index:300;
+  background:#1a2535;color:#fff;
+  border-radius:15px;padding:13px 15px;
+  box-shadow:0 8px 28px rgba(0,0,0,.38);
+  font-size:12px;line-height:1.75;
+}
+#iosHint.on{display:block}
+.ih-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:7px;
+}
+.ih-head span{font-size:13px;font-weight:700}
+.ih-close{
+  background:rgba(255,255,255,.15);color:#fff;
+  border:none;border-radius:7px;padding:5px 9px;font-size:13px;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:375px){.fg{grid-template-columns:1fr}.fw{grid-column:1}}
+</style>
+</head>
+<body>
+
+<!-- PWA BANNERS -->
+<div id="instBanner">
+  <div style="font-size:29px;flex-shrink:0">🛡️</div>
+  <div style="flex:1">
+    <div style="font-size:13px;font-weight:700">ثبّت التطبيق</div>
+    <div style="font-size:10px;opacity:.8;margin-top:2px">يعمل بدون إنترنت · سريع</div>
+  </div>
+  <button class="ibtn" id="instBtn">تثبيت ⬇️</button>
+  <button class="iclose" onclick="document.getElementById('instBanner').classList.remove('on')">✕</button>
+</div>
+
+<div id="iosHint">
+  <div class="ih-head">
+    <span>📲 تثبيت على آيفون</span>
+    <button class="ih-close" onclick="dismissIos()">✕</button>
+  </div>
+  <div>
+    1️⃣ اضغط <strong>زر المشاركة ⬆️</strong> في أسفل Safari<br>
+    2️⃣ اختر <strong>«إضافة إلى الشاشة الرئيسية»</strong><br>
+    3️⃣ اضغط <strong>«إضافة»</strong> — جاهز! 🎉
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="tb">
+  <div class="tb-r" id="tbRow">
+    <div class="tb-ico">🛡️</div>
+    <div>
+      <div class="tb-t">CCTV Rooms – Checking List</div>
+      <div class="tb-s">Primary Health Care Corporation · PHCC</div>
+    </div>
+  </div>
+  <div class="pb"><div class="pf" id="pf"></div></div>
+  <div class="pl" id="pl">الخطوة 1 من 6</div>
+</div>
+
+<!-- PILLS -->
+<div class="pills" id="pills">
+  <button class="pill on" data-s="0" onclick="go(0)">📋 البيانات</button>
+  <button class="pill"    data-s="1" onclick="go(1)">🏠 الغرفة</button>
+  <button class="pill"    data-s="2" onclick="go(2)">🧹 النظافة</button>
+  <button class="pill"    data-s="3" onclick="go(3)">📺 الأجهزة</button>
+  <button class="pill"    data-s="4" onclick="go(4)">🔧 الصيانة</button>
+  <button class="pill"    data-s="5" onclick="go(5)">📤 الإرسال</button>
+</div>
+
+<!-- ═══ STEP 0: META ═══ -->
+<div class="card on" id="s0">
+  <div class="ch">
+    <div class="ci c-bl">📋</div>
+    <div><div class="ct">بيانات التدقيق</div><div class="cs">أدخل معلومات الجلسة أولاً</div></div>
+  </div>
+  <div class="fg">
+    <div>
+      <label class="fl">التاريخ / Date</label>
+      <input class="fi" type="date" id="m_date">
+    </div>
+    <div>
+      <label class="fl">المنطقة / Region</label>
+      <div class="sw"><select class="fsl" id="m_region">
+        <option value="">اختر...</option>
+        <option>الوسطى / Central</option>
+        <option>الشمالية / Northern</option>
+        <option>الغربية / Western</option>
+        <option>الجنوبية / Southern</option>
+        <option>الشرقية / Eastern</option>
+        <option>الدوحة / Doha</option>
+      </select></div>
+    </div>
+    <div class="fw">
+      <label class="fl">المركز الصحي / Health Center</label>
+      <div class="sw"><select class="fsl" id="m_hc">
+        <option value="">اختر المركز الصحي...</option>
+        <optgroup label="── الوسطى / Central ──">
+          <option>مركز الوجبة الصحي — Al Wajbah</option>
+          <option>مركز معيذر الصحي — Muaither</option>
+          <option>مركز الكرعانة الصحي — Al Karaana</option>
+          <option>مركز أبو نخلة الصحي — Abu Nakhla</option>
+          <option>مركز ابو بكر الصحي — Abu Baker Al Siddiq</option>
+          <option>مركز الوعب الصحي — Al Waab</option>
+          <option>مركز مسيمير الصحي — Mesaimeer</option>
+          <option>مركز غرافة الريان الصحي — Gharrafat Al Rayyan</option>
+          <option>مركز الريان الصحي — Al Rayyan</option>
+          <option>مركز مدينة خليفة الصحي — Madinat Khalifa</option>
+          <option>مركز الخليج الغربي الصحي — West Bay</option>
+          <option>مركز السد الصحي — Al Sadd</option>
+          <option>مركز روضة الخيل الصحي — Rawdat Al Khail</option>
+          <option>مركز أم غويلينا الصحي — Umm Ghwailina</option>
+          <option>مركز المطار الصحي — Airport</option>
+          <option>مركز الثمامة الصحي — Al Thumama</option>
+          <option>مركز عمر بن الخطاب الصحي — Omar Bin Khattab</option>
+          <option>مركز المشاف الصحي — Al Mashaf</option>
+          <option>مركز لعبيب الصحي — Leabaib</option>
+        </optgroup>
+        <optgroup label="── الغربية / Western ──">
+          <option>مركز الشحانية الصحي — Al Sheehaniya</option>
+          <option>مركز الجميلية الصحي — Al Jumailiyah</option>
+        </optgroup>
+        <optgroup label="── الشمالية / Northern ──">
+          <option>مركز الرويس الصحي — Al Ruwais</option>
+          <option>مركز الكعبان الصحي — Al Kaaban</option>
+          <option>مركز الغويرية الصحي — Leghwairiya</option>
+          <option>مركز أم صلال الصحي — Umm Slal</option>
+          <option>مركز الظعاين الصحي — Al Daayen</option>
+          <option>مركز الخور الصحي — Al Khor</option>
+          <option>مركز جامعة قطر الصحي — Qatar University</option>
+          <option>مركز ام السنيم الصحي — Umm Al Seneem</option>
+        </optgroup>
+        <optgroup label="── الجنوب / Southern ──">
+          <option>مركز الوكرة الصحي — Al Wakra</option>
+          <option>مركز جنوب الوكرة الصحي — South Wakra</option>
+        </optgroup>
+      </select></div>
+    </div>
+    <div class="fw">
+      <label class="fl">المشرف / Supervisor</label>
+      <input class="fi" type="text" id="m_sup" placeholder="الاسم الكامل">
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STEP 1: ROOM ═══ -->
+<div class="card" id="s1">
+  <div class="ch">
+    <div class="ci c-bl">🏠</div>
+    <div><div class="ct">غرفة المراقبة / CCTV Room</div><div class="cs">حالة الغرفة والتجهيزات</div></div>
+  </div>
+  <div id="roomBody" style="padding-bottom:11px"></div>
+</div>
+
+<!-- ═══ STEP 2: CLEANING ═══ -->
+<div class="card" id="s2">
+  <div class="ch">
+    <div class="ci c-gn">🧹</div>
+    <div><div class="ct">النظافة / Cleaning</div><div class="cs">فحص نظافة الغرفة والمعدات</div></div>
+  </div>
+  <div id="cleanBody" style="padding-bottom:11px"></div>
+</div>
+
+<!-- ═══ STEP 3: DEVICES ═══ -->
+<div class="card" id="s3">
+  <div class="ch">
+    <div class="ci c-or">📺</div>
+    <div><div class="ct">الشاشات والكاميرات</div><div class="cs">إحصائيات الأجهزة</div></div>
+  </div>
+
+  <div class="sl" style="margin-top:12px">📺 الشاشات / Monitors</div>
+  <div class="ci2" style="margin-bottom:0">
+    <div class="ck-lbl">إجمالي الشاشات وحالتها</div>
+    <div class="ng" style="grid-template-columns:1fr 1fr;margin-bottom:7px">
+      <div class="nc"><span class="nlb">العدد الكلي</span><input class="ni" type="number" min="0" id="monT" placeholder="0" oninput="calcMon()"></div>
+      <div class="nc"><span class="nlb" style="color:var(--green)">تعمل ✓</span><input class="ni ng2" type="number" min="0" id="monW" placeholder="0" oninput="calcMon()"></div>
+    </div>
+    <div id="monBadRow" style="display:none;margin-bottom:7px">
+      <div class="nc"><span class="nlb" style="color:var(--red)">لا تعمل ✗</span><input class="ni nb2" id="monNW" placeholder="0" readonly></div>
+    </div>
+    <input class="cn" type="text" id="monNums" placeholder="أرقام الشاشات التي لا تعمل...">
+  </div>
+
+  <div class="sl" style="margin-top:13px">📷 الكاميرات / CAM's</div>
+  <div class="ci2" style="margin-bottom:0">
+    <div class="ck-lbl">إجمالي الكاميرات وحالتها</div>
+    <div class="ng" style="grid-template-columns:1fr 1fr 1fr;margin-bottom:7px">
+      <div class="nc"><span class="nlb">الكلي</span><input class="ni" type="number" min="0" id="camT" placeholder="0" oninput="calcCam()"></div>
+      <div class="nc"><span class="nlb" style="color:var(--green)">تعمل ✓</span><input class="ni ng2" type="number" min="0" id="camW" placeholder="0" oninput="calcCam()"></div>
+      <div class="nc"><span class="nlb" style="color:var(--red)">لا تعمل ✗</span><input class="ni nb2" id="camNW" placeholder="0" readonly></div>
+    </div>
+    <input class="cn" type="text" id="camNums" placeholder="أرقام الكاميرات التي لا تعمل...">
+  </div>
+
+  <div class="sl" style="margin-top:13px">🚫 محجوبة / Blocked</div>
+  <div class="ci2" style="margin-bottom:11px">
+    <div class="ck-lbl">الكاميرات محجوبة الرؤية</div>
+    <div class="ng" style="grid-template-columns:1fr;margin-bottom:7px">
+      <div class="nc"><span class="nlb">العدد / Qty</span><input class="ni" type="number" min="0" id="blkQ" placeholder="0"></div>
+    </div>
+    <input class="cn" type="text" id="blkNums" placeholder="أرقام الكاميرات المحجوبة..." style="margin-bottom:6px">
+    <input class="cn" type="text" id="blkRsn" placeholder="سبب الحجب / Reason...">
+  </div>
+</div>
+
+<!-- ═══ STEP 4: MAINTENANCE ═══ -->
+<div class="card" id="s4">
+  <div class="ch">
+    <div class="ci c-sl">🔧</div>
+    <div><div class="ct">الصيانة والملاحظات</div><div class="cs">سجل الصيانة والتوصيات</div></div>
+  </div>
+  <div id="maintBody" style="padding-bottom:4px"></div>
+  <div style="padding:0 13px 13px">
+    <div class="sl">📝 ملاحظات وتوصيات</div>
+    <div class="ci2">
+      <div class="ck-lbl">ملاحظات أخرى / Other Notes</div>
+      <textarea class="cn" id="otherNotes" rows="3" placeholder="أضف ملاحظاتك..."></textarea>
+    </div>
+    <div class="ci2" style="margin-top:7px">
+      <div class="ck-lbl">التوصيات / Recommendations</div>
+      <textarea class="cn" id="recs" rows="3" placeholder="أضف توصياتك..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STEP 5: SEND ═══ -->
+<div class="card" id="s5">
+  <div class="sh">
+    <h2>📊 ملخص التدقيق</h2>
+    <p id="sumSub">راجع النتائج وأرسل التقرير</p>
+  </div>
+  <div class="scr">
+    <div class="sn" id="scoreN">—</div>
+    <div class="slb">نسبة الامتثال</div>
+  </div>
+  <div class="sr">
+    <div class="sb2 sg2"><div class="n" id="stG">0</div><div class="l">✓ جيد</div></div>
+    <div class="sb2 sb3"><div class="n" id="stB">0</div><div class="l">✗ مشكلة</div></div>
+    <div class="sb2 sn2"><div class="n" id="stN">0</div><div class="l">— غير محدد</div></div>
+  </div>
+
+  <div class="was">
+    <h3>📤 إرسال التقرير</h3>
+
+    <!-- MAIN WA BUTTON -->
+    <button class="wabtn" id="waMBtn" onclick="sendMaster()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      إرسال التقرير واتساب
+    </button>
+
+    <div class="waok" id="waOk">✅ <span id="waOkTxt">تم فتح واتساب — أرسل الرسالة الآن</span></div>
+
+    <button class="waprev-btn" onclick="togPrev()">👁 معاينة الرسالة</button>
+    <div class="waprev" id="waPrev"></div>
+
+    <button class="cpybtn" onclick="copyRep()">📋 نسخ التقرير</button>
+
+    <div class="wdiv">إرسال لجهة إضافية</div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px">
+      <span style="font-size:12px;font-weight:700">جهات الاتصال</span>
+      <button class="wadd-btn" onclick="togAddForm()">+ إضافة</button>
+    </div>
+
+    <div class="wadd-form" id="wAddForm">
+      <div class="wadd-g">
+        <div>
+          <label class="fl">الاسم</label>
+          <input class="fi" id="wNewName" placeholder="المشرف..." style="padding:9px 11px;font-size:13px">
+        </div>
+        <div>
+          <label class="fl">الرقم</label>
+          <input class="fi" type="tel" id="wNewNum" placeholder="+974..." dir="ltr" style="padding:9px 11px;font-size:13px">
+        </div>
+      </div>
+      <button class="wsave" onclick="addContact()">💾 حفظ الجهة</button>
+    </div>
+
+    <div id="contactList"></div>
+
+    <button class="rstbtn" onclick="resetAll()">🔄 تدقيق جديد</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nb">
+  <button class="nbtn np" id="bPrev" onclick="prev()">← السابق</button>
+  <button class="nbtn nn" id="bNext" onclick="next()">التالي →</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ── PWA: Manifest + Icon generation ── */
+(function(){
+  function mkPNG(sz){
+    try{
+      var c=document.createElement('canvas');
+      c.width=c.height=sz;
+      var x=c.getContext('2d');
+      var r=sz*.22;
+      x.fillStyle='#0d3b6e';
+      x.beginPath();
+      x.moveTo(r,0);x.lineTo(sz-r,0);
+      x.quadraticCurveTo(sz,0,sz,r);
+      x.lineTo(sz,sz-r);x.quadraticCurveTo(sz,sz,sz-r,sz);
+      x.lineTo(r,sz);x.quadraticCurveTo(0,sz,0,sz-r);
+      x.lineTo(0,r);x.quadraticCurveTo(0,0,r,0);
+      x.closePath();x.fill();
+      x.font=Math.round(sz*.54)+'px serif';
+      x.textAlign='center';x.textBaseline='middle';
+      x.fillText('🛡️',sz/2,sz*.53);
+      return c.toDataURL('image/png');
+    }catch(e){return '';}
+  }
+  var i192=mkPNG(192), i512=mkPNG(512);
+  var ati=document.getElementById('ati');
+  if(ati&&i192) ati.href=i192;
+
+  var mf={
+    name:'PHCC CCTV Inspection',
+    short_name:'CCTV PHCC',
+    description:'PHCC CCTV Rooms Checking List',
+    start_url:location.href,
+    display:'standalone',
+    orientation:'portrait',
+    background_color:'#0d3b6e',
+    theme_color:'#0d3b6e',
+    lang:'ar',
+    icons:[
+      {src:i192,sizes:'192x192',type:'image/png',purpose:'any maskable'},
+      {src:i512,sizes:'512x512',type:'image/png',purpose:'any maskable'}
+    ]
+  };
+  try{
+    var bl=new Blob([JSON.stringify(mf)],{type:'application/manifest+json'});
+    var lk=document.createElement('link');
+    lk.rel='manifest';lk.href=URL.createObjectURL(bl);
+    document.head.appendChild(lk);
+  }catch(e){}
+})();
+
+/* ── PWA: Install handling ── */
+var _prompt=null;
+(function(){
+  var iOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  var standalone=window.navigator.standalone===true
+    ||window.matchMedia('(display-mode:standalone)').matches;
+  if(standalone) return;
+
+  if(iOS){
+    if(!localStorage.getItem('iosShown')){
+      setTimeout(function(){
+        document.getElementById('iosHint').classList.add('on');
+      },2500);
+    }
+    // add install button to topbar
+    setTimeout(function(){
+      var row=document.getElementById('tbRow');
+      if(!row) return;
+      var b=document.createElement('button');
+      b.textContent='⬇️';
+      b.style.cssText='background:rgba(255,255,255,.2);border:none;color:#fff;'
+        +'border-radius:8px;padding:7px 9px;font-size:15px;margin-right:auto;cursor:pointer;flex-shrink:0';
+      b.onclick=function(){
+        localStorage.removeItem('iosShown');
+        document.getElementById('iosHint').classList.add('on');
+      };
+      row.appendChild(b);
+    },400);
+    return;
+  }
+
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();_prompt=e;
+    setTimeout(function(){
+      document.getElementById('instBanner').classList.add('on');
+    },1800);
+  });
+  window.addEventListener('appinstalled',function(){
+    document.getElementById('instBanner').classList.remove('on');
+    toast('🎉 تم تثبيت التطبيق!');
+  });
+  var ib=document.getElementById('instBtn');
+  if(ib) ib.addEventListener('click',function(){
+    if(!_prompt) return;
+    _prompt.prompt();
+    _prompt.userChoice.then(function(r){
+      _prompt=null;
+      document.getElementById('instBanner').classList.remove('on');
+      if(r.outcome==='accepted') toast('✅ جاري تثبيت التطبيق...');
+    });
+  });
+})();
+
+function dismissIos(){
+  document.getElementById('iosHint').classList.remove('on');
+  localStorage.setItem('iosShown','1');
+}
+
+/* ── CONSTANTS ── */
+const MASTER='97466691491';
+const WA_KEY='phcc_wa_v3';
+const STEPS=6;
+let step=0;
+
+/* ── CHECK ITEMS DATA ── */
+const ROOM=[
+  {id:'r0',ar:'الوصول لغرفة المراقبة',en:'CCTV Room Accessing',t:'gb'},
+  {id:'r1',ar:'حالة الباب',en:'Doors Condition',t:'gb'},
+  {id:'r2',ar:'حالة النوافذ والستائر',en:'Windows + Curtains',t:'gb'},
+  {id:'r3',ar:'حالة التمديدات بالغرفة',en:'CCTV Room Installations',t:'gb'},
+];
+const CLEAN=[
+  {lbl:'داخل الغرفة / Inside',items:[
+    {id:'ci0',ar:'نظافة CCTV من الداخل',en:'Inside Cleanliness',t:'cd'},
+  ]},
+  {lbl:'خارج الغرفة / Outside',items:[
+    {id:'co0',ar:'نظافة CCTV من الخارج',en:'Outside Cleanliness',t:'cd'},
+  ]},
+  {lbl:'الشاشات / Screens',items:[
+    {id:'cs0',ar:'تنظيف الشاشات',en:'Screens Cleaning',t:'cd'},
+  ]},
+  {lbl:"الكاميرات / CAM's",items:[
+    {id:'cc0',ar:'تنظيف الكاميرات',en:"CAM's Cleaning",t:'cd',np:'أرقام الكاميرات الغير نظيفة...'},
+  ]},
+];
+const MAINT=[
+  {id:'m0',ar:'سجل الصيانة',en:'Log Book',t:'ai'},
+  {id:'m1',ar:'فريق الصيانة',en:'Maintenance Team',t:'ai'},
+];
+const OPTS={
+  gb:[['','اختر الحالة...'],['g','✅ جيدة / Good'],['b','❌ غير جيدة / Not Good']],
+  cd:[['','اختر الحالة...'],['g','✅ نظيفة / Clean'],['b','❌ غير نظيفة / Not Clean']],
+  ai:[['','اختر الحالة...'],['a','✅ فعّال / Active'],['ia','❌ غير فعّال / Not Active']],
+};
+const CARD_CLS={g:'g',b:'b',a:'a',ia:'ia'};
+const SEL_CLS={g:'sg',b:'sb',a:'sa',ia:'sia'};
+
+/* ── BUILD CHECK ITEMS ── */
+function mkItem(item){
+  var opts=OPTS[item.t];
+  var np=item.np||'ملاحظات...';
+  var d=document.createElement('div');
+  d.className='ci2';d.id='itm_'+item.id;
+  d.innerHTML='<div class="ck-lbl">'+item.ar
+    +'<span class="ck-en">'+item.en+'</span></div>'
+    +'<div class="sw2"><select class="cks" id="sel_'+item.id+'" onchange="onSel(\''+item.id+'\')">'
+    +opts.map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>';}).join('')
+    +'</select></div>'
+    +'<input class="cn" type="text" id="note_'+item.id+'" placeholder="'+np+'">';
+  return d;
+}
+
+function buildRoom(){
+  var b=document.getElementById('roomBody');
+  var lbl=document.createElement('div');
+  lbl.className='sl';lbl.textContent='🏠 حالة الغرفة';
+  b.appendChild(lbl);
+  ROOM.forEach(function(i){b.appendChild(mkItem(i));});
+}
+function buildClean(){
+  var b=document.getElementById('cleanBody');
+  CLEAN.forEach(function(g){
+    var lbl=document.createElement('div');
+    lbl.className='sl';lbl.textContent='🧹 '+g.lbl;
+    b.appendChild(lbl);
+    g.items.forEach(function(i){b.appendChild(mkItem(i));});
+  });
+}
+function buildMaint(){
+  var b=document.getElementById('maintBody');
+  var lbl=document.createElement('div');
+  lbl.className='sl';lbl.textContent='🔧 حالة الصيانة';
+  b.appendChild(lbl);
+  MAINT.forEach(function(i){b.appendChild(mkItem(i));});
+}
+
+/* ── SELECT CHANGE ── */
+function onSel(id){
+  var sel=document.getElementById('sel_'+id);
+  var card=document.getElementById('itm_'+id);
+  var v=sel.value;
+  sel.className='cks';
+  card.className='ci2';
+  if(v&&SEL_CLS[v]) sel.classList.add(SEL_CLS[v]);
+  if(v&&CARD_CLS[v]) card.classList.add(CARD_CLS[v]);
+}
+
+/* ── CALCS ── */
+function calcMon(){
+  var t=+document.getElementById('monT').value||0;
+  var w=+document.getElementById('monW').value||0;
+  var bad=Math.max(0,t-w);
+  document.getElementById('monNW').value=bad||'';
+  document.getElementById('monBadRow').style.display=bad>0?'block':'none';
+}
+function calcCam(){
+  var t=+document.getElementById('camT').value||0;
+  var w=+document.getElementById('camW').value||0;
+  document.getElementById('camNW').value=Math.max(0,t-w)||'';
+}
+
+/* ── GET ALL SELECTS ── */
+function getAllSels(){
+  var ids=ROOM.map(function(i){return i.id;})
+    .concat(CLEAN.reduce(function(a,g){return a.concat(g.items.map(function(i){return i.id;}));},[]))
+    .concat(MAINT.map(function(i){return i.id;}));
+  var good=0,bad=0,na=0;
+  ids.forEach(function(id){
+    var s=document.getElementById('sel_'+id);
+    if(!s) return;
+    var v=s.value;
+    if(v==='g'||v==='a') good++;
+    else if(v==='b'||v==='ia') bad++;
+    else na++;
+  });
+  return {good:good,bad:bad,na:na,total:good+bad+na};
+}
+
+/* ── BUILD WHATSAPP MESSAGE ── */
+function buildMsg(){
+  var date=document.getElementById('m_date').value||'—';
+  var reg=document.getElementById('m_region').value||'—';
+  var hc=document.getElementById('m_hc').value||'—';
+  var sup=document.getElementById('m_sup').value||'—';
+  var s=getAllSels();
+  var pct=s.total>0?Math.round((s.good/s.total)*100):0;
+  var ico=pct>=80?'🟢':pct>=50?'🟡':'🔴';
+  var camT=document.getElementById('camT').value||'—';
+  var camW=document.getElementById('camW').value||'—';
+  var camNW=document.getElementById('camNW').value||'0';
+  var monT=document.getElementById('monT').value||'—';
+  var monW=document.getElementById('monW').value||'—';
+  var monNW=document.getElementById('monNW').value||'0';
+  var blkQ=document.getElementById('blkQ').value||'0';
+  var notes=document.getElementById('otherNotes').value.slice(0,100);
+  var rec=document.getElementById('recs').value.slice(0,100);
+
+  var allIds=ROOM.map(function(i){return i.id;})
+    .concat(CLEAN.reduce(function(a,g){return a.concat(g.items.map(function(i){return i.id;}));},[]))
+    .concat(MAINT.map(function(i){return i.id;}));
+  var allItems=ROOM.concat(CLEAN.reduce(function(a,g){return a.concat(g.items);},[]),MAINT);
+  var issues=allIds.filter(function(id){
+    var v=(document.getElementById('sel_'+id)||{}).value;
+    return v==='b'||v==='ia';
+  }).map(function(id){
+    var item=allItems.find(function(x){return x.id===id;});
+    var n=(document.getElementById('note_'+id)||{}).value;
+    return '  ❌ '+(item?item.ar:id)+(n?' — '+n.slice(0,40):'');
+  });
+
+  var L=['🛡️ *تقرير CCTV | PHCC*',
+    '━━━━━━━━━━━━━━━━━━',
+    '🏥 *'+hc+'*',
+    '📍 '+reg+'  📅 '+date,
+    '👤 '+sup,
+    '━━━━━━━━━━━━━━━━━━',
+    ico+' *الامتثال: '+pct+'%*  (✅'+s.good+' ❌'+s.bad+' ➖'+s.na+')',
+    '━━━━━━━━━━━━━━━━━━',
+    '📺 شاشات: '+monW+'/'+monT+(monNW&&monNW!=='0'?'  ⚠️لا تعمل: '+monNW:''),
+    '📷 كاميرات: '+camW+'/'+camT+(camNW&&camNW!=='0'?'  ⚠️لا تعمل: '+camNW:''),
+    '🚫 محجوبة: '+blkQ,
+  ];
+  if(issues.length){
+    L.push('━━━━━━━━━━━━━━━━━━');
+    L.push('⚠️ *يحتاج اهتمام:*');
+    issues.forEach(function(l){L.push(l);});
+  }
+  if(notes){L.push('━━━━━━━━━━━━━━━━━━');L.push('📝 '+notes);}
+  if(rec) L.push('📌 '+rec);
+  L.push('━━━━━━━━━━━━━━━━━━');
+  L.push('_PHCC CCTV Inspection App_');
+  return L.join('\n');
+}
+
+/* ── OPEN WHATSAPP (iOS Safari safe) ── */
+function openWA(numRaw,msg){
+  var clean=numRaw.replace(/\D/g,'').replace(/^0+/,'');
+  var url='https://wa.me/'+clean+'?text='+encodeURIComponent(msg);
+  var a=document.createElement('a');
+  a.href=url;a.target='_blank';a.rel='noopener noreferrer';
+  a.style.cssText='position:fixed;top:-9999px;left:-9999px;opacity:0';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function(){try{document.body.removeChild(a);}catch(e){}},1000);
+}
+
+/* ── SEND MASTER ── */
+function sendMaster(){
+  var msg=buildMsg();
+  var btn=document.getElementById('waMBtn');
+  btn.disabled=true;
+  btn.innerHTML='<span style="animation:spin .7s linear infinite;display:inline-block">⏳</span> جاري الفتح...';
+  openWA(MASTER,msg);
+  setTimeout(function(){
+    btn.disabled=false;
+    btn.innerHTML='<svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> إرسال التقرير واتساب';
+    var ok=document.getElementById('waOk');
+    ok.style.display='flex';
+    document.getElementById('waOkTxt').textContent='✅ تم فتح واتساب — أرسل الرسالة الآن';
+    toast('💬 تم فتح واتساب');
+  },1500);
+}
+
+/* ── PREVIEW ── */
+function togPrev(){
+  var b=document.getElementById('waPrev');
+  var open=b.classList.toggle('on');
+  if(open) b.textContent=buildMsg();
+}
+
+/* ── CONTACTS ── */
+function loadC(){try{return JSON.parse(localStorage.getItem(WA_KEY))||[];}catch(e){return[];}}
+function saveC(a){localStorage.setItem(WA_KEY,JSON.stringify(a));}
+
+function renderC(){
+  var list=document.getElementById('contactList');
+  var arr=loadC();
+  if(!arr.length){
+    list.innerHTML='<div class="wempty">👥 لا توجد جهات محفوظة<br><small>اضغط «+ إضافة» لحفظ رقم إضافي</small></div>';
+    return;
+  }
+  list.innerHTML=arr.map(function(c,i){
+    return '<div class="wch">'
+      +'<div class="wav">'+c.name.charAt(0).toUpperCase()+'</div>'
+      +'<div class="wai"><div class="wan">'+c.name+'</div><div class="wanu">'+c.num+'</div></div>'
+      +'<button class="wcs" onclick="sendC(\''+c.num+'\')">إرسال</button>'
+      +'<button class="wcd" onclick="delC('+i+')">🗑</button>'
+      +'</div>';
+  }).join('');
+}
+
+function togAddForm(){
+  var f=document.getElementById('wAddForm');
+  f.classList.toggle('on');
+  if(f.classList.contains('on')) document.getElementById('wNewName').focus();
+}
+function addContact(){
+  var name=document.getElementById('wNewName').value.trim();
+  var num=document.getElementById('wNewNum').value.trim();
+  if(!name||!num){toast('⚠️ أدخل الاسم والرقم');return;}
+  var arr=loadC();
+  var clean=num.replace(/\s/g,'');
+  if(arr.find(function(c){return c.num===clean;})){toast('⚠️ الرقم محفوظ مسبقاً');return;}
+  arr.push({name:name,num:clean});saveC(arr);
+  document.getElementById('wNewName').value='';
+  document.getElementById('wNewNum').value='';
+  document.getElementById('wAddForm').classList.remove('on');
+  renderC();toast('✅ تم حفظ '+name);
+}
+function delC(i){
+  var arr=loadC();
+  if(!confirm('حذف "'+arr[i].name+'"؟')) return;
+  arr.splice(i,1);saveC(arr);renderC();toast('🗑 تم الحذف');
+}
+function sendC(num){openWA(num,buildMsg());toast('💬 تم فتح واتساب');}
+
+/* ── COPY ── */
+function copyRep(){
+  var txt=buildMsg();
+  var ok=function(){toast('✅ تم نسخ التقرير');};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(ok).catch(function(){fbCopy(txt);ok();});
+  } else {fbCopy(txt);ok();}
+}
+function fbCopy(txt){
+  var ta=document.createElement('textarea');
+  ta.value=txt;ta.style.cssText='position:fixed;top:-9999px;left:-9999px;opacity:0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  document.body.removeChild(ta);
+}
+
+/* ── NAVIGATION ── */
+function go(n){
+  for(var i=0;i<STEPS;i++){
+    var el=document.getElementById('s'+i);
+    if(el) el.classList.remove('on');
+  }
+  step=n;
+  var cur=document.getElementById('s'+step);
+  if(cur) cur.classList.add('on');
+
+  document.querySelectorAll('.pill').forEach(function(p){
+    var s=+p.dataset.s;
+    p.classList.remove('on','dn');
+    if(s===step) p.classList.add('on');
+    else if(s<step) p.classList.add('dn');
+  });
+  var ap=document.querySelector('.pill.on');
+  if(ap) ap.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+
+  var pct=Math.round((step/(STEPS-1))*100);
+  document.getElementById('pf').style.width=pct+'%';
+  document.getElementById('pl').textContent='الخطوة '+(step+1)+' من '+STEPS;
+
+  document.getElementById('bPrev').style.opacity=step===0?'.35':'1';
+  document.getElementById('bPrev').disabled=step===0;
+  var nn=document.getElementById('bNext');
+  if(step===STEPS-1){
+    nn.style.display='none';
+  } else {
+    nn.style.display='block';
+    nn.textContent=step===STEPS-2?'📊 الملخص →':'التالي →';
+    nn.disabled=false;
+  }
+  if(step===STEPS-1) buildSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function next(){if(step<STEPS-1)go(step+1);}
+function prev(){if(step>0)go(step-1);}
+
+/* ── SUMMARY ── */
+function buildSummary(){
+  var s=getAllSels();
+  var pct=s.total>0?Math.round((s.good/s.total)*100):0;
+  var el=document.getElementById('scoreN');
+  el.textContent=pct+'%';
+  el.className='sn '+(pct>=80?'gr':pct>=50?'am':'rd');
+  document.getElementById('stG').textContent=s.good;
+  document.getElementById('stB').textContent=s.bad;
+  document.getElementById('stN').textContent=s.na;
+  var hc=document.getElementById('m_hc').value||'المركز';
+  var dt=document.getElementById('m_date').value||'';
+  document.getElementById('sumSub').textContent=hc+' — '+dt;
+  document.getElementById('waPrev').textContent=buildMsg();
+  renderC();
+}
+
+/* ── RESET ── */
+function resetAll(){
+  if(!confirm('مسح جميع البيانات وبدء تدقيق جديد؟')) return;
+  document.querySelectorAll('.cks').forEach(function(s){s.value='';s.className='cks';});
+  document.querySelectorAll('.ci2').forEach(function(c){c.className='ci2';});
+  document.querySelectorAll('input[type=text],input[type=number],textarea').forEach(function(i){i.value='';});
+  document.getElementById('m_date').value=new Date().toISOString().split('T')[0];
+  document.getElementById('monBadRow').style.display='none';
+  document.getElementById('waOk').style.display='none';
+  document.getElementById('waPrev').classList.remove('on');
+  go(0);toast('🔄 تم إعادة التعيين');
+}
+
+/* ── TOAST ── */
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  clearTimeout(t._t);
+  t._t=setTimeout(function(){t.classList.remove('on');},2700);
+}
+
+/* ── INIT ── */
+document.getElementById('m_date').value=new Date().toISOString().split('T')[0];
+buildRoom();buildClean();buildMaint();go(0);
+</script>
+</body>
+</html>
